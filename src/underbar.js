@@ -38,8 +38,13 @@ var _ = {};
   // Like first, but for the last elements. If n is undefined, return just the
   // last element.
   _.last = function(array, n) {
-    var numberOfElements = array.length -1;
-    return n === undefined ? array[numberOfElements] : array.slice(-numberOfElements, - n);
+    if (n === undefined) {
+      return array[array.length -1];
+    }else if(array.length <= n){
+      return array;
+    }else{
+      return array.slice(array.length -n, array.length);
+    };
   };
 
   // Call iterator(value, key, collection) for each element of collection.
@@ -122,6 +127,11 @@ var _ = {};
     // map() is a useful primitive iteration function that works a lot
     // like each(), but in addition to running the operation on all
     // the members, it also maintains an array of results.
+    var results = [];
+    _.each(collection, function(value, index){
+      results.push(iterator(value));
+    })
+    return results;
   };
 
   /*
