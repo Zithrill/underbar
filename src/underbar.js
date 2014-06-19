@@ -38,6 +38,8 @@ var _ = {};
   // Like first, but for the last elements. If n is undefined, return just the
   // last element.
   _.last = function(array, n) {
+    var numberOfElements = array.length -1;
+    return n === undefined ? array[numberOfElements] : array.slice(-numberOfElements, - n);
   };
 
   // Call iterator(value, key, collection) for each element of collection.
@@ -46,6 +48,15 @@ var _ = {};
   // Note: _.each does not have a return value, but rather simply runs the
   // iterator function over each item in the input collection.
   _.each = function(collection, iterator) {
+    if(Array.isArray(collection)) {
+        for(var i = 0; i < collection.length; i++) {
+          iterator(collection[i], i, collection);
+        }
+      }else{
+        for(var property in collection) {
+          iterator(collection[property], property, collection);
+        }
+      }
   };
 
   // Returns the index at which value can be found in the array, or -1 if value
@@ -67,16 +78,42 @@ var _ = {};
 
   // Return all elements of an array that pass a truth test.
   _.filter = function(collection, test) {
+    var trueArray = [];
+    _.each(collection, function(item, index){
+      if(test(item)){
+        trueArray.push(item);
+      };
+    })
+    return trueArray;
   };
 
   // Return all elements of an array that don't pass a truth test.
   _.reject = function(collection, test) {
     // TIP: see if you can re-use _.filter() here, without simply
     // copying code in and modifying it
+    return _.filter(collection, function(value) {
+        return !test(value);
+      });
   };
 
   // Produce a duplicate-free version of the array.
   _.uniq = function(array) {
+    var dupFree = [];
+    var dupFound = false;
+    _.each(array, function(outerItem, outerIndex){
+      if (dupFree.length != 0) {
+        _.each(dupFree, function(innerItem, innerIndex){
+          if (innerItem == outerItem) {
+            dupFound = true;
+          };
+        })
+      };
+      if (!dupFound) {
+        dupFree.push(outerItem);
+      };
+      dupFound = false;
+    })
+    return dupFree;
   };
 
 
