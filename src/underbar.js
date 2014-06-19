@@ -8,6 +8,7 @@ var _ = {};
   // seem very useful, but remember it--if a function needs to provide an
   // iterator when the user does not pass one in, this will be handy.
   _.identity = function(val) {
+    return val;
   };
 
   /**
@@ -156,9 +157,15 @@ var _ = {};
   // Note: you will need to learn a bit about .apply to complete this.
   _.invoke = function(collection, methodName, args) {
     var result = [];
-    _.each(collection, function(value, index){
-        result.push(methodName.apply(value,args)); 
-    })
+    if (false) {
+        _.each(collection, function(value, index){
+            result.push(methodName.apply(value,args)); 
+        })
+    } else{
+        _.each(collection, function(value, index){
+            result.push(value.apply(this,methodName));
+        })
+    };
     return result;
   };
 
@@ -176,6 +183,14 @@ var _ = {};
   //     return total + number;
   //   }, 0); // should be 6
   _.reduce = function(collection, iterator, accumulator) {
+    if (accumulator == undefined) {
+        accumulator = collection[0];
+    };
+    _.each(collection, function(value, index){
+        accumulator = iterator(accumulator, value);
+    })
+
+    return accumulator;
   };
 
   // Determine if the array or object contains a given value (using `===`).
