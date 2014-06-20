@@ -157,15 +157,15 @@ var _ = {};
   // Note: you will need to learn a bit about .apply to complete this.
   _.invoke = function(collection, methodName, args) {
     var result = [];
-    if (false) {
-        _.each(collection, function(value, index){
-            result.push(methodName.apply(value,args)); 
-        })
-    } else{
-        _.each(collection, function(value, index){
-            result.push(value.apply(this,methodName));
-        })
-    };
+        if (typeof methodName === 'string') {
+            _.each(collection, function(value, index){
+                result.push(value[methodName].apply(value, args));
+            })
+        } else{
+            _.each(collection, function(value, index){
+                result.push(methodName.apply(value, args)); 
+            })
+        };
     return result;
   };
 
@@ -209,6 +209,19 @@ var _ = {};
   // Determine whether all of the elements match a truth test.
   _.every = function(collection, iterator) {
     // TIP: Try re-using reduce() here.
+    if (collection.length == 0) {
+        return true;
+    };
+    return _.reduce(collection, function(accumulator, value){
+        if ( typeof iterator !== 'undefined' && accumulator == true) {
+            console.log(iterator(value) + " had callback " + iterator);
+            accumulator = iterator(value);
+        };
+        if ((accumulator) && (value || value == {})) {
+            return true;
+        };
+        return false;
+    });
   };
 
   // Determine whether any of the elements pass a truth test. If no iterator is
