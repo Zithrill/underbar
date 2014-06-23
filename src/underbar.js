@@ -72,13 +72,11 @@ var _ = {};
     // implemented for you. Instead of using a standard `for` loop, though,
     // it uses the iteration helper `each`, which you will need to write.
     var result = -1;
-
     _.each(array, function(item, index) {
       if (item === target && result === -1) {
         result = index;
       }
     });
-
     return result;
   };
 
@@ -121,7 +119,6 @@ var _ = {};
     })
     return dupFree;
   };
-
 
   // Return the results of applying an iterator to each element.
   _.map = function(collection, iterator) {
@@ -212,22 +209,46 @@ var _ = {};
     if (collection.length == 0) {
         return true;
     };
+    var startingAccumulator = null;
+    if (iterator) {
+        startingAccumulator = iterator(collection[0]);
+    };
     return _.reduce(collection, function(accumulator, value){
-        if ( typeof iterator !== 'undefined' && accumulator == true) {
-            console.log(iterator(value) + " had callback " + iterator);
-            accumulator = iterator(value);
+        var currentValue = value;
+        if (iterator) {
+            currentValue = iterator(value);
         };
-        if ((accumulator) && (value || value == {})) {
-            return true;
+        if ((accumulator || accumulator == 'undefined') && (currentValue || currentValue == {})) {
+            currentValue = true;
+        }else{
+            currentValue = false;
         };
-        return false;
-    });
+        return currentValue;
+    }, startingAccumulator);
   };
 
   // Determine whether any of the elements pass a truth test. If no iterator is
   // provided, provide a default one
   _.some = function(collection, iterator) {
     // TIP: There's a very clever way to re-use every() here.
+    if (collection.length == 0) {
+        return false;
+    };
+    var wasTrue = false;
+    if (iterator) {
+        _.every(collection, function (argument) {
+            if (iterator(argument)) {
+                wasTrue = true;
+            };
+        });
+    } else{
+        _.every(collection, function (argument) {
+            if (argument) {
+                wasTrue = true;
+            };
+        });
+    };
+    return wasTrue;
   };
 
 
@@ -250,11 +271,34 @@ var _ = {};
   //     bla: "even more stuff"
   //   }); // obj1 now contains key1, key2, key3 and bla
   _.extend = function(obj) {
+    _.each(Array.prototype.slice.call(arguments, 1), function(values) {
+      if (values) {
+        for (var entries in values) {
+          obj[entries] = values[entries];
+        }
+      };
+    });
+    return obj;
   };
 
   // Like extend, but doesn't ever overwrite a key that already
   // exists in obj
   _.defaults = function(obj) {
+    var exists = function (value) {
+        return _.every(obj, function (argument) {
+            return argument === value;
+        })
+    };
+    _.each(Array.prototype.slice.call(arguments, 1), function(values) {
+      if (values) {
+        for (var entries in values) {
+            if (_.reject(entries, exists)){
+                obj[entries] = values[entries];
+            }
+        }
+      };
+    });
+    return obj;
   };
 
 
@@ -280,7 +324,7 @@ var _ = {};
     return function() {
       if (!alreadyCalled) {
         // TIP: .apply(this, arguments) is the standard way to pass on all of the
-        // infromation from one function call to another.
+        // information from one function call to another.
         result = func.apply(this, arguments);
         alreadyCalled = true;
       }
@@ -296,6 +340,7 @@ var _ = {};
   // already computed the result for the given argument and return that value
   // instead if possible.
   _.memoize = function(func) {
+    _.once(func);
   };
 
   // Delays a function for the given number of milliseconds, and then calls
