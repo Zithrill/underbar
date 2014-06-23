@@ -284,17 +284,21 @@ var _ = {};
   // Like extend, but doesn't ever overwrite a key that already
   // exists in obj
   _.defaults = function(obj) {
-    var exists = function (value) {
-        return _.every(obj, function (argument) {
-            return argument === value;
-        })
-    };
+    var exists = function (argument) {
+        //Need to work on not copying a falsy value
+        if (argument && (argument != null && argument != '' && !isNaN(argument))) {
+            console.log(argument);
+            return false;
+        };
+        return true;
+    }
     _.each(Array.prototype.slice.call(arguments, 1), function(values) {
       if (values) {
         for (var entries in values) {
-            if (_.reject(entries, exists)){
+            if (exists(obj[entries])) {
                 obj[entries] = values[entries];
-            }
+            };
+
         }
       };
     });
