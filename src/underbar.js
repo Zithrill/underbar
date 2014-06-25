@@ -287,7 +287,6 @@ var _ = {};
     var exists = function (argument) {
         //Need to work on not copying a falsy value
         if (argument && (argument != null && argument != '' && !isNaN(argument))) {
-            console.log(argument);
             return false;
         };
         return true;
@@ -354,6 +353,7 @@ var _ = {};
   // parameter. For example _.delay(someFunction, 500, 'a', 'b') will
   // call someFunction('a', 'b') after 500ms
   _.delay = function(func, wait) {
+    setTimeout(func, wait, arguments);
   };
 
 
