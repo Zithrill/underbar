@@ -343,7 +343,18 @@ var _ = {};
   // already computed the result for the given argument and return that value
   // instead if possible.
   _.memoize = function(func) {
-    _.once(func);
+    var valuePrime;
+    var alreadyCalled = false;
+    var result;
+    return function(value) {
+      if (!alreadyCalled || value != valuePrime) {
+        valuePrime = value;
+        result = func.apply(this, arguments);
+        alreadyCalled = true;
+      }
+      return result;
+    };
+
   };
 
   // Delays a function for the given number of milliseconds, and then calls
