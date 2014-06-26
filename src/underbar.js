@@ -45,7 +45,7 @@ var _ = {};
       return array;
     }else{
       return array.slice(array.length -n, array.length);
-    };
+    }
   };
 
   // Call iterator(value, key, collection) for each element of collection.
@@ -86,8 +86,8 @@ var _ = {};
     _.each(collection, function(item, index){
       if(test(item)){
         trueArray.push(item);
-      };
-    })
+      }
+    });
     return trueArray;
   };
 
@@ -105,18 +105,18 @@ var _ = {};
     var dupFree = [];
     var dupFound = false;
     _.each(array, function(outerItem, outerIndex){
-      if (dupFree.length != 0) {
+      if(dupFree.length != 0){
         _.each(dupFree, function(innerItem, innerIndex){
           if (innerItem == outerItem) {
             dupFound = true;
-          };
-        })
-      };
+          }
+        });
+      }
       if (!dupFound) {
         dupFree.push(outerItem);
-      };
+      }
       dupFound = false;
-    })
+    });
     return dupFree;
   };
 
@@ -128,7 +128,7 @@ var _ = {};
     var results = [];
     _.each(collection, function(value, index){
       results.push(iterator(value));
-    })
+    });
     return results;
   };
 
@@ -157,12 +157,12 @@ var _ = {};
         if (typeof methodName === 'string') {
             _.each(collection, function(value, index){
                 result.push(value[methodName].apply(value, args));
-            })
+            });
         } else{
             _.each(collection, function(value, index){
                 result.push(methodName.apply(value, args)); 
-            })
-        };
+            });
+        }
     return result;
   };
 
@@ -180,12 +180,12 @@ var _ = {};
   //     return total + number;
   //   }, 0); // should be 6
   _.reduce = function(collection, iterator, accumulator) {
-    if (accumulator == undefined) {
+    if (accumulator == undefined){
         accumulator = collection[0];
-    };
+    }
     _.each(collection, function(value, index){
         accumulator = iterator(accumulator, value);
-    })
+    });
 
     return accumulator;
   };
@@ -208,21 +208,21 @@ var _ = {};
     // TIP: Try re-using reduce() here.
     if (collection.length == 0) {
         return true;
-    };
+    }
     var startingAccumulator = null;
     if (iterator) {
         startingAccumulator = iterator(collection[0]);
-    };
+    }
     return _.reduce(collection, function(accumulator, value){
         var currentValue = value;
         if (iterator) {
             currentValue = iterator(value);
-        };
+        }
         if ((accumulator || accumulator == 'undefined') && (currentValue || currentValue == {})) {
             currentValue = true;
         }else{
             currentValue = false;
-        };
+        }
         return currentValue;
     }, startingAccumulator);
   };
@@ -233,21 +233,21 @@ var _ = {};
     // TIP: There's a very clever way to re-use every() here.
     if (collection.length == 0) {
         return false;
-    };
+    }
     var wasTrue = false;
     if (iterator) {
         _.every(collection, function (argument) {
             if (iterator(argument)) {
                 wasTrue = true;
-            };
+            }
         });
     } else{
         _.every(collection, function (argument) {
             if (argument) {
                 wasTrue = true;
-            };
+            }
         });
-    };
+    }
     return wasTrue;
   };
 
@@ -276,7 +276,7 @@ var _ = {};
         for (var entries in values) {
           obj[entries] = values[entries];
         }
-      };
+      }
     });
     return obj;
   };
@@ -285,21 +285,21 @@ var _ = {};
   // exists in obj
   _.defaults = function(obj) {
     var exists = function (argument) {
-        //Need to work on not copying a falsy value
-        if (argument && (argument != null && argument != '' && !isNaN(argument))) {
-            return false;
-        };
-        return true;
-    }
+      //Need to work on not copying a falsy value
+      if (argument && (argument != null && argument != '' && !isNaN(argument))) {
+          return false;
+      }
+      return true;
+    };
     _.each(Array.prototype.slice.call(arguments, 1), function(values) {
       if (values) {
         for (var entries in values) {
             if (exists(obj[entries])) {
                 obj[entries] = values[entries];
-            };
+            }
 
         }
-      };
+      }
     });
     return obj;
   };
