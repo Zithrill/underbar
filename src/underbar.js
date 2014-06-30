@@ -286,8 +286,12 @@ var _ = {};
   _.defaults = function(obj) {
     var exists = function (argument) {
       //Need to work on not copying a falsy value
-      if (argument && (argument != null && argument != '' && !isNaN(argument))) {
+      if (argument) {
           return false;
+      }else if (argument === undefined) {
+        return true;
+      }else if (argument.toString() == "0" || argument.toString() == "1" || argument == '' || argument == '' || isNaN(argument)){
+        return false;
       }
       return true;
     };
@@ -447,6 +451,23 @@ var _ = {};
   //
   // See the Underbar readme for details.
   _.throttle = function(func, wait) {
+    var hasBeenTriggered = false;
+    var countDownStarted = false;
+    return function () {
+      if (!countDownStarted) {
+        if (!hasBeenTriggered) {
+          hasBeenTriggered = true;
+          return func();
+        }else{
+          countDownStarted = true;
+          setTimeout(function () {
+            hasBeenTriggered = false;
+            countDownStarted = false;
+            return func();
+          }, wait);
+        }
+      }
+    };
   };
 
 }).call(this);
